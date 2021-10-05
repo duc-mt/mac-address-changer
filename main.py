@@ -22,11 +22,11 @@ import subprocess
 import new_mac 
 
 
-# Specify the network interface.
-interface = input('What is the network interface? ')
-
 # Call the function to return the newly generated MAC address.
 MAC = new_mac.UserChoice()
+
+# Specify the network interface.
+interface = input('What is the network interface? ')
 
 # Inform the user of the change.
 print(f'[+] Changing the MAC address for {interface} to {MAC}.')
