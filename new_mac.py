@@ -19,7 +19,13 @@ import subprocess
 import random
 
 
-def NewMac():
+def ManualNewMac():
+    # Prompt the user to enter the MAC address.
+    new_mac = input('Assign the new mac address: ')
+    return new_mac
+
+
+def RandomNewMac():
     # Set the initial values.
     new_mac = ''
     count = 0
@@ -33,9 +39,10 @@ def NewMac():
         hex.append(chr(j))
 
     for _ in range(6):
-        byte =  random.choice(hex) * 2      # This operation equals one byte. There are six in total.
-        new_mac += byte
-        count += 2 
+        for _ in range(2):
+            # Each time it iterates, one hex value is added. Two iterations result in one byte.
+            new_mac += random.choice(hex)
+            count += 1 
         if count % 2 == 0:
             new_mac += ':'
 
@@ -43,4 +50,28 @@ def NewMac():
     new_mac = new_mac[0:-1]
 
     # A fruitful function
-    return new_mac
+    return new_mac 
+
+
+def UserChoice():
+    message = ('This is a program to change your machine\'s current MAC address.',
+               'Do you want to do it:',
+               '1. manually',
+               '2. randomly',
+               sep = '\n',
+    )
+    
+    print(messgae)
+
+    choice = int(input('Pick a number: '))
+
+    if choice == 1:
+        new_mac = ManualNewMac()
+        return new_mac
+    elif choice == 2:
+        new_mac = RandomNewMac()
+        return new_mac
+    else:
+        print('WRONG INPUT\n')
+        user_choice()
+        return None

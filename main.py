@@ -13,7 +13,7 @@
 
 """
 The first module is to access the terminal for inputting user commands.
-The second module contains the function which 'randomly' generates a new MAC address.
+The second module contains the function which generate a new MAC address based on the user choice.
 """
 
 import subprocess
@@ -24,9 +24,9 @@ import new_mac
 interface = 'eth0'
 
 # Call the function to return the newly generated MAC address.
-MAC = new_mac.NewMac()
+MAC = new_mac.UserChoice()
 
-# Inform user of the change.
+# Inform the user of the change.
 print(f'[+] Changing the MAC address for {interface} to {MAC}.')
 
 # The process of changing the current MAC address.
