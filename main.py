@@ -23,7 +23,7 @@ import new_mac
 # Specify the network interface.
 interface = 'eth0'
 
-# The newly generated MAC address.
+# Call the function to return the newly generated MAC address.
 MAC = new_mac.NewMac()
 
 # Inform user of the change.
