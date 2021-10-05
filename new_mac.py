@@ -49,7 +49,7 @@ def RandomNewMac():
     # Remove the last index ':'
     new_mac = new_mac[0:-1]
 
-    # A fruitful function
+    # A fruitful function.
     return new_mac 
 
 
@@ -63,17 +63,17 @@ def UserChoice():
     
     choice = int(input('Pick a number: '))
     
-    # InpuValidation
+    # InpuValidation.
     while choice not in [1, 2]:
         print('WRONG INPUT\n')
         choice = int(input('Pick a number: '))
     
-    # Now we have a valid choice
+    # Now we have a valid choice.
     if choice == 1:
         new_mac = ManualNewMac()
     else:
         new_mac = RandomNewMac()
     
-    # Fruitful function
+    # Fruitful function.
     return new_mac
 
