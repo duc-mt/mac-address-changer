@@ -12,7 +12,7 @@
 
 """
 The first module is to access the terminal for inputting commands.
-The second module is to 'randomly' chooses a hex (or nibble) for each figure of the new MAC address.
+The second module is to 'randomly' choose a hex (or nibble) for each figure of the new MAC address.
 """
 
 import subprocess
