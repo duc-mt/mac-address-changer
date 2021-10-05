@@ -33,7 +33,7 @@ def NewMac():
         hex.append(chr(j))
 
     for _ in range(6):
-        byte =  random.choice(hex) + random.choice(hex)
+        byte =  random.choice(hex) * 2      # This operation equals to one byte. There are 6 bytes required in total.
         new_mac += byte
         count += 2 
         if count % 2 == 0:
