@@ -4,3 +4,4 @@
 # Documentation
 
 # Output
+![An example of successfully changing the machine's current MAC address](output.jpg)
