@@ -5,7 +5,7 @@
 # Author:       Tan Duc Mai
 # Email:        tan.duc.work@gmail.com
 # Date:         4/10/2021
-# Description:  Randomly generate a new MAC address. 
+# Description:  Manually or randomly generate a new MAC address, depending on user choice.
 #   I hereby declare that I completed this work without any improper help
 #   from a third party and without using any aids other than those cited.
 #
