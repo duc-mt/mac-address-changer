@@ -54,15 +54,13 @@ def RandomNewMac():
 
 
 def UserChoice():
-    message = ('This is a program to change your machine\'s current MAC address.',
-               'Do you want to do it:',
-               '1. manually',
-               '2. randomly',
-               sep = '\n',
+    print ('This is a program to change your machine\'s current MAC address.',
+           'Do you want to do it:',
+           '1. manually',
+           '2. randomly',
+           sep='\n',
     )
     
-    print(messgae)
-
     choice = int(input('Pick a number: '))
 
     if choice == 1:
