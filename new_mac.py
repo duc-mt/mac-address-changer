@@ -18,6 +18,7 @@ The second module is to 'randomly' choose a hex (or nibble) for each figure of t
 import subprocess
 import random
 
+
 def NewMac():
     # Set the initial values.
     new_mac = ''
