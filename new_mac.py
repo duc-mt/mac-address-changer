@@ -71,5 +71,5 @@ def UserChoice():
         return new_mac
     else:
         print('WRONG INPUT\n')
-        user_choice()
+        UserChoice()
         return None
