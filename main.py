@@ -7,6 +7,8 @@
 # Date:         4/10/2021
 # Description:  Change the machine's current MAC address.
 #               This program MUST be run in the Root Terminal.
+#               If you choose to generate randomly, it may come up with an error message since that address is invalid.
+#               In this case, just re-run the program until no error occurs.
 #   I hereby declare that I completed this work without any improper help
 #   from a third party and without using any aids other than those cited.
 #
