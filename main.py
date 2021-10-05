@@ -12,11 +12,12 @@
 
 """
 The first module is to access the terminal for inputting user commands.
-The second module contains the function required to generate a new MAC address.
+The second module contains the function which 'randomly'  generates a new MAC address.
 """
 
 import subprocess
 import new_mac 
+
 
 # Specify the network interface.
 interface = 'eth0'
