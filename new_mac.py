@@ -62,14 +62,18 @@ def UserChoice():
     )
     
     choice = int(input('Pick a number: '))
-
+    
+    # InpuValidation
+    while choice not in [1, 2]:
+        print('WRONG INPUT\n')
+        choice = int(input('Pick a number: '))
+    
+    # Now we have a valid choice
     if choice == 1:
         new_mac = ManualNewMac()
-        return new_mac
-    elif choice == 2:
-        new_mac = RandomNewMac()
-        return new_mac
     else:
-        print('WRONG INPUT\n')
-        UserChoice()
-        return None
+        new_mac = RandomNewMac()
+    
+    # Fruitful function
+    return new_mac
+
