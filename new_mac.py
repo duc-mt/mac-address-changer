@@ -4,8 +4,8 @@
 # File:         new_mac.py
 # Author:       Tan Duc Mai
 # Email:        tan.duc.work@gmail.com
-# Date:         20/8/2021
-# Description:  The main working area of the dictionary.
+# Date:         4/10/2021
+# Description:  Randomly generate a new MAC address. 
 #   I hereby declare that I completed this work without any improper help
 #   from a third party and without using any aids other than those cited.
 #
@@ -20,7 +20,6 @@ import random
 
 def NewMac():
     # Set the initial values.
-    interface = 'eth0'
     new_mac = ''
     count = 0
     hex = []
