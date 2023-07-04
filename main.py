@@ -88,23 +88,27 @@ def user_choice():
 
 # ------------------------------- Main Function -------------------------------
 if __name__ == '__main__':
-    # Call the function to return the newly generated MAC address.
-    MAC = user_choice()
+    answer = input('Have you back up your MAC address? [Y/n] ')
+    if answer.lower() in ('y', 'yes', ''):
+        # Call the function to return the newly generated MAC address.
+        MAC = user_choice()
 
-    # Specify the network interface.
-    interface = input('What is the network interface? ')
+        # Specify the network interface.
+        interface = input('What is the network interface? ')
 
-    # Inform the user of the change.
-    print(f'[+] Changing the MAC address for {interface} to {MAC}.')
+        # Inform the user of the change.
+        print(f'[+] Changing the MAC address for {interface} to {MAC}.')
 
-    # The process of changing the current MAC address.
+        # The process of changing the current MAC address.
 
-    # Less secure version
-    # subprocess.call(f'ifconfig {interface} down', shell=True)
-    # subprocess.call(f'ifconfig eth0 hw ether {MAC}', shell=True)
-    # subprocess.call(f'ifconfig {interface} up', shell=True)
+        # Less secure version
+        # subprocess.call(f'ifconfig {interface} down', shell=True)
+        # subprocess.call(f'ifconfig eth0 hw ether {MAC}', shell=True)
+        # subprocess.call(f'ifconfig {interface} up', shell=True)
 
-    # More secure version
-    subprocess.call(['ifconfig', interface, 'down'])
-    subprocess.call(['ifconfig', interface, 'hw', 'ether',  MAC])
-    subprocess.call(['ifconfig', interface, 'up'])
+        # More secure version
+        subprocess.call(['ifconfig', interface, 'down'])
+        subprocess.call(['ifconfig', interface, 'hw', 'ether',  MAC])
+        subprocess.call(['ifconfig', interface, 'up'])
+    else:
+        print('Please back it up!')
