@@ -1,13 +1,13 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 # Table of Contents
 
-<!-- vim-markdown-toc GFM -->
+- [MAC address changer](#mac-address-changer)
+- [Introduction](#introduction)
+- [real_mac.txt](#real_mactxt)
+- [Output](#output)
 
-1. [MAC address changer](#mac-address-changer)
-1. [Introduction](#introduction)
-1. [Documentation](#documentation)
-1. [Output](#output)
-
-<!-- vim-markdown-toc -->
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 # MAC address changer
 
