@@ -6,6 +6,9 @@
 - [Introduction](#introduction)
 - [Requirements](#requirements)
 - [real_mac.txt](#real_mactxt)
+- [mac_history.txt](#mac_historytxt)
+- [Status](#status)
+- [Command-Line Mode](#command-line-mode)
 - [Output](#output)
 - [Testing](#testing)
 - [Development](#development)
@@ -46,16 +49,17 @@ hexadecimal digits:
 # Requirements
 
 This script only uses the Python standard library - no `pip install` is
-needed to run it. It does call out to the external `ifconfig` command (from
-the `net-tools` package), which many modern Linux distributions no longer
-install by default:
+needed to run it. It changes the interface using whichever of `ip` (from
+the `iproute2` package, nearly universal on modern Linux) or `ifconfig`
+(from the older `net-tools` package) is available, preferring `ip`:
 
 ```bash
-sudo apt install net-tools   # Debian/Ubuntu
+sudo apt install iproute2   # provides `ip` - usually already installed
+sudo apt install net-tools  # provides the older `ifconfig`, if you need it
 ```
 
-The script checks for `ifconfig` on startup and prints a clear message if
-it isn't found, rather than crashing partway through.
+The script checks for one of them on startup and prints a clear message if
+neither is found, rather than crashing partway through.
 
 # real_mac.txt
 
@@ -75,6 +79,57 @@ can never overwrite the true original with a value that isn't original
 anymore. From then on, "restore original" is offered as a menu option
 whenever you run the script against that interface.
 
+# mac_history.txt
+
+Separately from `real_mac.txt` (which only ever remembers the *true*
+original), every successful change is also logged here - up to the 5 most
+recent per interface, oldest dropped first. This is what "undo last
+change" uses: unlike restoring the original, undo steps back through
+recent changes one at a time. The format is the same `interface,mac` pair
+per line, but with one line per past value rather than one per interface.
+
+# Status
+
+Run with `--status` to see every interface at a glance - its current MAC,
+whether an original is backed up, and how many undo steps are available -
+without changing anything:
+
+```bash
+sudo python main.py --status
+```
+
+```txt
+INTERFACE      CURRENT MAC         ORIGINAL            UNDO STEPS
+eth0           aa:bb:cc:dd:ee:ff   11:22:33:44:55:66   2
+wlan0          11:22:33:44:55:66   -                   0
+```
+
+# Command-Line Mode
+
+Running `main.py` with no arguments starts the interactive menu. Passing
+`--interface` and `--mode` instead runs a single operation and exits -
+useful for scripting or automation (e.g. a systemd unit or cron job that
+rotates the MAC on boot):
+
+```bash
+# Random MAC
+sudo python main.py --interface eth0 --mode random
+
+# A specific MAC
+sudo python main.py --interface eth0 --mode manual --mac aa:bb:cc:dd:ee:ff
+
+# Back to the true original
+sudo python main.py --interface eth0 --mode restore
+
+# Back one step (the previous value, not necessarily the original)
+sudo python main.py --interface eth0 --mode undo
+
+# Preview any of the above without actually changing anything
+sudo python main.py --interface eth0 --mode random --dry-run
+```
+
+Run `python main.py --help` for the full list of options.
+
 # Output
 
 ![An example of successfully changing the machine's current MAC
@@ -89,9 +144,9 @@ pip install -r requirements-dev.txt
 pytest
 ```
 
-`ifconfig` is never actually invoked during tests - `subprocess.call()` is
-mocked throughout, since running it for real needs root privileges and
-would actually change the machine's network configuration.
+`ifconfig`/`ip` are never actually invoked during tests - `subprocess.call()`
+is mocked throughout, since running either for real needs root privileges
+and would actually change the machine's network configuration.
 
 # Development
 
@@ -172,3 +227,41 @@ subsequent runs. If it backed up unconditionally every time, changing an
 already-changed MAC a second time would silently overwrite the one
 backup that actually mattered - the true original - with a value that
 isn't original anymore.
+
+## New: `ip` fallback, status view, CLI mode, dry-run, change history
+
+Five more features, on top of everything above:
+
+1. **Falls back to `ip` when `ifconfig` is missing** (`detect_network_tool()`)
+   - and actually prefers it, since `ip` (from `iproute2`) is the one
+   that's nearly universally present on modern Linux, while `ifconfig`
+   (from `net-tools`) increasingly isn't installed by default. Whichever
+   is available, `build_change_commands()` builds the right command
+   sequence for it.
+2. **`--status`** lists every interface with its current MAC, whether an
+   original is backed up, and how many undo steps are available - see
+   "Status" above.
+3. **A non-interactive CLI mode** (`--interface`/`--mode`) - see
+   "Command-Line Mode" above - for scripting and automation.
+4. **`--dry-run`** previews what a CLI-mode operation would do without
+   changing anything or touching `real_mac.txt`/`mac_history.txt`.
+5. **Change history and "undo last change"**, distinct from "restore
+   original" - see "mac_history.txt" above. Every successful change is
+   logged (capped at 5 entries per interface); undoing pops the most
+   recent one and applies it, without pushing a new entry of its own -
+   so repeated undos step further back, but there's no "redo" once
+   something's been undone. This is a deliberate simplification, not an
+   oversight.
+
+**A bug found while building and testing #5**: the interactive menu
+originally hardcoded "3. restore original" and "4. undo last change" as
+fixed option numbers. When only one of the two was actually available
+(e.g. history exists but no backup does), the *other* number was still
+skipped - option "3" simply wasn't offered, but the input loop kept
+re-prompting for a valid number until one was given. Scripted or
+copy-pasted input using the "wrong" number (rejected, unlike a live user
+who'd just try again) looped forever instead of failing once with a clear
+error. Confirmed directly: a test using input `'4'` for undo when no
+backup existed hung until killed. Fixed by numbering the menu dynamically
+based on what's actually offered, rather than reserving fixed numbers for
+options that might not appear.
