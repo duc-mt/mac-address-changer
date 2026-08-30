@@ -79,6 +79,11 @@ can never overwrite the true original with a value that isn't original
 anymore. From then on, "restore original" is offered as a menu option
 whenever you run the script against that interface.
 
+Both this file and `mac_history.txt` (below) are runtime-generated and
+gitignored, not tracked in this repository - they're specific to whoever
+ran the script and on which machine, so there's nothing meaningful to
+commit.
+
 # mac_history.txt
 
 Separately from `real_mac.txt` (which only ever remembers the *true*
