@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+.coverage
+coverage.xml
+
+# Generated at runtime by main.py itself (backup on first MAC change,
+# rolling change history) - specific to whoever ran the script and
+# on which machine, so these aren't something to commit.
+real_mac.txt
+mac_history.txt

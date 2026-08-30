@@ -4,7 +4,7 @@ version = "1.0.0"
 description = "Manually or randomly change a machine's current MAC address."
 readme = "README.md"
 requires-python = ">=3.10"
-authors = [{ name = "Tan Duc Mai", email = "henryfromvietnam@gmail.com" }]
+authors = [{ name = "Mai Tan Duc", email = "ducmai.network@gmail.com" }]
 
 [tool.ruff]
 line-length = 88
