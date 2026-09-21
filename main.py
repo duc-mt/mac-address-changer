@@ -8,8 +8,6 @@
 #     CREATED:  2021-10-04
 # DESCRIPTION:  Change the machine's current MAC address.
 #               This program MUST be run in the Root Terminal.
-#   I hereby declare that I completed this work without any improper help
-#   from a third party and without using any aids other than those cited.
 #
 # =============================================================================
 
