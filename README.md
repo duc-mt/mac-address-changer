@@ -2,7 +2,7 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 # Table of Contents
 
-- [MAC address changer](#mac-address-changer)
+- [macmorpher](#macmorpher)
 - [Introduction](#introduction)
 - [Requirements](#requirements)
 - [real_mac.txt](#real_mactxt)
@@ -16,7 +16,7 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-# MAC address changer
+# macmorpher
 
 **Aim**: Propose A Python program that could either manually or randomly change
 the machine's current MAC address, depending on user choice.

@@ -1,5 +1,5 @@
 [project]
-name = "mac-address-changer"
+name = "macmorpher"
 version = "1.0.0"
 description = "Manually or randomly change a machine's current MAC address."
 readme = "README.md"
