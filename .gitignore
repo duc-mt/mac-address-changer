@@ -10,3 +10,5 @@ coverage.xml
 # on which machine, so these aren't something to commit.
 real_mac.txt
 mac_history.txt
+.venv/
+.mypy_cache/

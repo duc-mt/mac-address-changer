@@ -51,7 +51,7 @@ class TestInterfaceValidation:
         assert 'No such interface' in out
         assert 'eth0, lo' in out
 
-    def test_interface_name_input_is_trimmed(self):
+    def test_interface_name_input_is_trimmed(self) -> None:
         inputs = iter([' eth0 ', '2'])
         with mock.patch('main.detect_network_tool', return_value='ip'), \
              mock.patch('builtins.input', lambda *a: next(inputs)), \
@@ -71,7 +71,7 @@ class TestInterfaceValidation:
 
 
 class TestAutomaticBackup:
-    def test_first_time_seeing_an_interface_backs_it_up(self, capsys):
+    def test_first_time_seeing_an_interface_backs_it_up(self, capsys) -> None:
         inputs = iter(['eth0', '2'])
         with mock.patch('main.detect_network_tool', return_value='ip'), \
              mock.patch('builtins.input', lambda *a: next(inputs)), \
@@ -122,7 +122,7 @@ class TestAutomaticBackup:
 
 
 class TestChangeVerification:
-    def test_successful_change_is_verified_against_the_new_mac(self, capsys):
+    def test_successful_change_is_verified_against_the_new_mac(self, capsys) -> None:
         """Regression test: previously "success" meant only "ifconfig's
         exit code was 0" - the script never actually confirmed the
         interface's MAC had changed to the intended value."""
@@ -171,7 +171,7 @@ class TestChangeVerification:
         # be recorded as a successful, undoable change.
         mock_append_history.assert_not_called()
 
-    def test_failed_change_mac_prints_no_success_message(self, capsys):
+    def test_failed_change_mac_prints_no_success_message(self, capsys) -> None:
         inputs = iter(['eth0', '2'])
         with mock.patch('main.detect_network_tool', return_value='ip'), \
              mock.patch('builtins.input', lambda *a: next(inputs)), \
@@ -250,7 +250,7 @@ class TestHistoryRecording:
 
 
 class TestMainDispatch:
-    def test_status_flag_prints_status_and_does_not_run_interactive(self):
+    def test_status_flag_prints_status_and_does_not_run_interactive(self) -> None:
         with mock.patch('sys.argv', ['main.py', '--status']), \
              mock.patch('main.detect_network_tool', return_value='ip'), \
              mock.patch('main.print_status') as mock_print_status, \
@@ -261,7 +261,7 @@ class TestMainDispatch:
         mock_print_status.assert_called_once()
         mock_run_interactive.assert_not_called()
 
-    def test_no_arguments_runs_the_interactive_menu(self):
+    def test_no_arguments_runs_the_interactive_menu(self) -> None:
         with mock.patch('sys.argv', ['main.py']), \
              mock.patch('main.detect_network_tool', return_value='ip'), \
              mock.patch('main.run_interactive') as mock_run_interactive:
@@ -270,7 +270,7 @@ class TestMainDispatch:
         assert exit_code == 0
         mock_run_interactive.assert_called_once()
 
-    def test_missing_tool_exits_before_dispatching_anywhere(self, capsys):
+    def test_missing_tool_exits_before_dispatching_anywhere(self, capsys) -> None:
         with mock.patch('sys.argv', ['main.py']), \
              mock.patch('main.detect_network_tool', return_value=None), \
              mock.patch('main.run_interactive') as mock_run_interactive:
@@ -280,14 +280,14 @@ class TestMainDispatch:
         mock_run_interactive.assert_not_called()
         assert 'neither ip nor ifconfig' in capsys.readouterr().out
 
-    def test_interface_without_mode_is_an_error(self):
+    def test_interface_without_mode_is_an_error(self) -> None:
         with mock.patch('sys.argv', ['main.py', '--interface', 'eth0']), \
              mock.patch('main.detect_network_tool', return_value='ip'), \
              pytest.raises(SystemExit) as exc_info:
             main.main()
         assert exc_info.value.code == 2
 
-    def test_mode_without_interface_is_an_error(self):
+    def test_mode_without_interface_is_an_error(self) -> None:
         with mock.patch('sys.argv', ['main.py', '--mode', 'random']), \
              mock.patch('main.detect_network_tool', return_value='ip'), \
              pytest.raises(SystemExit) as exc_info:

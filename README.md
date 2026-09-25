@@ -18,6 +18,10 @@
 
 # macmorpher
 
+[![CI](https://github.com/duc-mt/macmorpher/actions/workflows/ci.yml/badge.svg)](https://github.com/duc-mt/macmorpher/actions/workflows/ci.yml)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 **Aim**: Propose A Python program that could either manually or randomly change
 the machine's current MAC address, depending on user choice.
 

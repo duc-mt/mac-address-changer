@@ -5,6 +5,17 @@ description = "Manually or randomly change a machine's current MAC address."
 readme = "README.md"
 requires-python = ">=3.10"
 authors = [{ name = "Mai Tan Duc", email = "ducmai.network@gmail.com" }]
+dependencies = []
+
+[project.optional-dependencies]
+dev = [
+    "pytest==8.3.5",
+    "pytest-cov==6.0.0",
+    "ruff==0.9.6",
+    "bandit==1.8.3",
+    "mypy==1.15.0",
+    "pre-commit==3.8.0"
+]
 
 [tool.ruff]
 line-length = 88
@@ -16,3 +27,16 @@ select = ["F", "E9", "B", "SIM", "RUF"]
 [tool.pytest.ini_options]
 addopts = "--cov=main --cov-report=term-missing"
 testpaths = ["tests"]
+
+[tool.mypy]
+strict = true
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+
+[[tool.mypy.overrides]]
+module = "tests.*"
+disallow_untyped_defs = false
+disallow_incomplete_defs = false
+ignore_errors = true

@@ -29,7 +29,7 @@ class TestGetInterfaceMac:
 
         assert main.get_interface_mac("eth0") == "aa:bb:cc:dd:ee:ff"
 
-    def test_strips_trailing_whitespace(self, tmp_path, monkeypatch):
+    def test_strips_trailing_whitespace(self, tmp_path, monkeypatch) -> None:
         (tmp_path / "eth0").mkdir()
         (tmp_path / "eth0" / "address").write_text("aa:bb:cc:dd:ee:ff\n\n")
         monkeypatch.setattr(main, "SYSFS_NET_PATH", str(tmp_path))
@@ -54,7 +54,7 @@ class TestGetInterfaceMac:
 
 
 class TestListInterfaces:
-    def test_lists_every_interface_sorted(self, tmp_path, monkeypatch):
+    def test_lists_every_interface_sorted(self, tmp_path, monkeypatch) -> None:
         make_fake_sysfs(
             tmp_path,
             {"wlan0": "11:22:33:44:55:66", "eth0": "aa:bb:cc:dd:ee:ff"},
@@ -63,7 +63,7 @@ class TestListInterfaces:
 
         assert main.list_interfaces() == ["eth0", "wlan0"]
 
-    def test_empty_when_sysfs_path_is_missing(self, tmp_path, monkeypatch):
+    def test_empty_when_sysfs_path_is_missing(self, tmp_path, monkeypatch) -> None:
         monkeypatch.setattr(
             main, "SYSFS_NET_PATH", str(tmp_path / "does-not-exist")
         )

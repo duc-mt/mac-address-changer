@@ -12,11 +12,11 @@ import main
 
 
 class TestReadBackup:
-    def test_missing_file_returns_empty_dict(self, tmp_path):
+    def test_missing_file_returns_empty_dict(self, tmp_path) -> None:
         backup_file = str(tmp_path / 'real_mac.txt')
         assert main.read_backup(backup_file) == {}
 
-    def test_reads_back_what_was_written(self, tmp_path):
+    def test_reads_back_what_was_written(self, tmp_path) -> None:
         backup_file = str(tmp_path / 'real_mac.txt')
         backup_file_path = tmp_path / 'real_mac.txt'
         backup_file_path.write_text('eth0,aa:bb:cc:dd:ee:ff\n')
@@ -25,7 +25,7 @@ class TestReadBackup:
             'eth0': 'aa:bb:cc:dd:ee:ff',
         }
 
-    def test_reads_multiple_interfaces(self, tmp_path):
+    def test_reads_multiple_interfaces(self, tmp_path) -> None:
         backup_file_path = tmp_path / 'real_mac.txt'
         backup_file_path.write_text(
             'eth0,aa:bb:cc:dd:ee:ff\nwlan0,11:22:33:44:55:66\n'
@@ -36,7 +36,7 @@ class TestReadBackup:
             'wlan0': '11:22:33:44:55:66',
         }
 
-    def test_skips_malformed_lines(self, tmp_path):
+    def test_skips_malformed_lines(self, tmp_path) -> None:
         backup_file_path = tmp_path / 'real_mac.txt'
         backup_file_path.write_text(
             'eth0,aa:bb:cc:dd:ee:ff\n'
@@ -48,7 +48,7 @@ class TestReadBackup:
             'eth0': 'aa:bb:cc:dd:ee:ff',
         }
 
-    def test_skips_lines_from_the_old_bare_mac_format(self, tmp_path):
+    def test_skips_lines_from_the_old_bare_mac_format(self, tmp_path) -> None:
         """Regression test: the old backup format
         (`cat /sys/class/net/*/address > real_mac.txt`) produced one
         bare MAC per line, with no comma and no interface name. Those
@@ -60,7 +60,7 @@ class TestReadBackup:
 
 
 class TestWriteBackup:
-    def test_writes_a_new_entry(self, tmp_path):
+    def test_writes_a_new_entry(self, tmp_path) -> None:
         backup_file = str(tmp_path / 'real_mac.txt')
         main.write_backup(backup_file, 'eth0', 'aa:bb:cc:dd:ee:ff')
 
@@ -68,7 +68,7 @@ class TestWriteBackup:
             'eth0': 'aa:bb:cc:dd:ee:ff',
         }
 
-    def test_adding_a_second_interface_preserves_the_first(self, tmp_path):
+    def test_adding_a_second_interface_preserves_the_first(self, tmp_path) -> None:
         backup_file = str(tmp_path / 'real_mac.txt')
         main.write_backup(backup_file, 'eth0', 'aa:bb:cc:dd:ee:ff')
         main.write_backup(backup_file, 'wlan0', '11:22:33:44:55:66')

@@ -6,15 +6,15 @@ import main
 
 
 class TestManualNewMac:
-    def test_accepts_a_valid_mac_on_first_try(self):
+    def test_accepts_a_valid_mac_on_first_try(self) -> None:
         with mock.patch('builtins.input', return_value='01:23:45:67:89:ab'):
             assert main.manual_new_mac() == '01:23:45:67:89:ab'
 
-    def test_strips_surrounding_whitespace(self):
+    def test_strips_surrounding_whitespace(self) -> None:
         with mock.patch('builtins.input', return_value=' 01:23:45:67:89:ab '):
             assert main.manual_new_mac() == '01:23:45:67:89:ab'
 
-    def test_reprompts_on_malformed_input(self, capsys):
+    def test_reprompts_on_malformed_input(self, capsys) -> None:
         with mock.patch(
             'builtins.input',
             side_effect=['not a mac', '01:23:45:67:89:ab'],

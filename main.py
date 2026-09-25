@@ -63,7 +63,7 @@ MAX_HISTORY_PER_INTERFACE = 5
 
 
 # ---------------------------- Function Definitions ---------------------------
-def is_valid_mac(mac):
+def is_valid_mac(mac: str) -> bool:
     """Return True if `mac` is a well-formed MAC address.
 
     Checks the shape ip/ifconfig actually accept (six colon- or
@@ -73,7 +73,7 @@ def is_valid_mac(mac):
     return bool(MAC_ADDRESS_PATTERN.match(mac))
 
 
-def get_interface_mac(interface):
+def get_interface_mac(interface: str) -> str | None:
     """Read a network interface's current MAC address directly from
     sysfs (no subprocess, no root needed just to read it).
 
@@ -95,7 +95,7 @@ def get_interface_mac(interface):
         return None
 
 
-def list_interfaces():
+def list_interfaces() -> list[str]:
     """List the names of network interfaces present on this machine,
     for a helpful error message when get_interface_mac() finds none
     matching what the user typed."""
@@ -105,7 +105,7 @@ def list_interfaces():
         return []
 
 
-def read_backup(filename):
+def read_backup(filename: str) -> dict[str, str]:
     """Read the interface -> original-MAC backup file into a dict.
 
     Parameters
@@ -137,7 +137,7 @@ def read_backup(filename):
     return backups
 
 
-def write_backup(filename, interface, mac):
+def write_backup(filename: str, interface: str, mac: str) -> None:
     """Record `interface`'s MAC address in the backup file, replacing
     any existing entry for that interface and leaving every other
     interface's entry untouched."""
@@ -148,7 +148,7 @@ def write_backup(filename, interface, mac):
             f.write(f'{iface},{iface_mac}\n')
 
 
-def read_history(filename):
+def read_history(filename: str) -> dict[str, list[str]]:
     """Read the change-history file into a dict mapping each
     interface to the list of its past MAC addresses, oldest first.
 
@@ -166,7 +166,7 @@ def read_history(filename):
         Empty if the file doesn't exist yet. Malformed lines are
         skipped, same reasoning as read_backup().
     """
-    history = {}
+    history: dict[str, list[str]] = {}
     try:
         with open(filename) as f:
             for line in f:
@@ -180,7 +180,7 @@ def read_history(filename):
     return history
 
 
-def _write_history(filename, history):
+def _write_history(filename: str, history: dict[str, list[str]]) -> None:
     """Write a complete interface -> [mac, ...] history dict to
     `filename`, one line per entry, interfaces in sorted order and
     each interface's own entries kept in their original (oldest
@@ -192,8 +192,8 @@ def _write_history(filename, history):
                 f.write(f'{interface},{mac}\n')
 
 
-def append_history(filename, interface, mac,
-                    max_entries=MAX_HISTORY_PER_INTERFACE):
+def append_history(filename: str, interface: str, mac: str,
+                   max_entries: int = MAX_HISTORY_PER_INTERFACE) -> None:
     """Record `mac` as the most recent change-history entry for
     `interface`, trimming to the `max_entries` most recent entries for
     that interface (older ones are dropped, not the whole file)."""
@@ -205,7 +205,7 @@ def append_history(filename, interface, mac,
     _write_history(filename, history)
 
 
-def pop_last_history(filename, interface):
+def pop_last_history(filename: str, interface: str) -> str | None:
     """Remove and return the most recent history entry for
     `interface` - this is the value "undo last change" restores to.
 
@@ -226,7 +226,7 @@ def pop_last_history(filename, interface):
     return last
 
 
-def manual_new_mac():
+def manual_new_mac() -> str:
     # Prompt the user to enter the MAC address, retrying until it's a
     # well-formed address. Previously any string at all was accepted
     # here and passed straight to ifconfig, which would fail later
@@ -241,7 +241,7 @@ def manual_new_mac():
     return new_mac
 
 
-def make_locally_administered(mac_byte):
+def make_locally_administered(mac_byte: int) -> int:
     """Adjust a single random byte (0-255) so it's safe to use as the
     first octet of a MAC address: clear the multicast/broadcast bit
     (bit 0) and set the locally-administered bit (bit 1).
@@ -261,7 +261,7 @@ def make_locally_administered(mac_byte):
     return (mac_byte & 0b11111100) | 0b00000010
 
 
-def random_new_mac():
+def random_new_mac() -> str:
     # Work out the new MAC address: six random bytes, formatted as hex
     # pairs. The first byte is adjusted by make_locally_administered()
     # so the result is always a valid, usable MAC - see its docstring.
@@ -271,8 +271,8 @@ def random_new_mac():
     return ':'.join(f'{byte:02x}' for byte in [first_byte, *other_bytes])
 
 
-def user_choice(interface, backup_filename=BACKUP_FILE,
-                 history_filename=HISTORY_FILE):
+def user_choice(interface: str, backup_filename: str = BACKUP_FILE,
+                history_filename: str = HISTORY_FILE) -> tuple[str, str]:
     """Ask how to set `interface`'s new MAC address: manually,
     randomly, restored to its original value (if a backup exists), or
     undone back to its previous value (if there's change history).
@@ -346,12 +346,12 @@ def user_choice(interface, backup_filename=BACKUP_FILE,
     elif action == 'random':
         return random_new_mac(), 'random'
     elif action == 'restore':
-        return original_mac, 'restore'
+        assert original_mac is not None; return original_mac, 'restore'
     else:
-        return last_mac, 'undo'
+        assert last_mac is not None; return last_mac, 'undo'
 
 
-def detect_network_tool():
+def detect_network_tool() -> str | None:
     """Work out which command this system has available to change a
     network interface's MAC address.
 
@@ -374,7 +374,7 @@ def detect_network_tool():
     return None
 
 
-def build_change_commands(tool, interface, new_mac):
+def build_change_commands(tool: str, interface: str, new_mac: str) -> list[list[str]]:
     """Build the sequence of commands needed to change `interface`'s
     MAC address to `new_mac`, for whichever tool is available.
 
@@ -406,7 +406,7 @@ def build_change_commands(tool, interface, new_mac):
 
 
 # ------------------------------- Main Function -------------------------------
-def change_mac(interface, new_mac, tool=None):
+def change_mac(interface: str, new_mac: str, tool: str | None = None) -> bool:
     """Bring `interface` down, assign it `new_mac`, then bring it back
     up, using whichever of ip/ifconfig is available. Returns True if
     every step succeeded.
@@ -442,7 +442,7 @@ def change_mac(interface, new_mac, tool=None):
     return True
 
 
-def print_status():
+def print_status() -> None:
     """List every network interface on this machine, its current MAC
     address, whether an original has been backed up for it, and how
     many change-history entries (undo steps) are available."""
@@ -462,7 +462,7 @@ def print_status():
         print(f'{interface:<15}{current:<20}{original:<20}{undo_steps}')
 
 
-def run_interactive():
+def run_interactive() -> None:
     """Run the interactive, menu-driven session (the original
     behaviour of this program, extended with the features above)."""
     tool = detect_network_tool()
@@ -563,7 +563,7 @@ def run_interactive():
 
 
 # ------------------------------ Non-Interactive CLI ---------------------------
-def build_arg_parser():
+def build_arg_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description='Change a network interface\'s MAC address, manually, '
                      'randomly, or by restoring/undoing a previous value. '
@@ -593,7 +593,7 @@ def build_arg_parser():
     return parser
 
 
-def run_cli(args, parser, tool):
+def run_cli(args: argparse.Namespace, parser: argparse.ArgumentParser, tool: str) -> int:
     """Run one CLI-mode operation and return a process exit code."""
     interface = args.interface
     current_mac = get_interface_mac(interface)
@@ -662,7 +662,7 @@ def run_cli(args, parser, tool):
     return 0
 
 
-def main():
+def main() -> int:
     parser = build_arg_parser()
     args = parser.parse_args()
 

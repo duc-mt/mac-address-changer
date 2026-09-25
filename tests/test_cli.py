@@ -12,14 +12,14 @@ import pytest
 import main
 
 
-def run_main(argv, tool='ip'):
+def run_main(argv, tool='ip') -> None:
     with mock.patch('sys.argv', ['main.py', *argv]), \
          mock.patch('main.detect_network_tool', return_value=tool):
         return main.main()
 
 
 class TestManualMode:
-    def test_changes_to_the_given_mac(self, capsys):
+    def test_changes_to_the_given_mac(self, capsys) -> None:
         with mock.patch(
             'main.get_interface_mac',
             side_effect=['11:22:33:44:55:66', 'aa:bb:cc:dd:ee:ff'],
@@ -35,14 +35,14 @@ class TestManualMode:
         assert exit_code == 0
         assert 'Success' in capsys.readouterr().out
 
-    def test_missing_mac_is_an_error(self):
+    def test_missing_mac_is_an_error(self) -> None:
         with mock.patch(
             'main.get_interface_mac', return_value='11:22:33:44:55:66'
         ), pytest.raises(SystemExit) as exc_info:
             run_main(['--interface', 'eth0', '--mode', 'manual'])
         assert exc_info.value.code == 2
 
-    def test_invalid_mac_is_an_error(self):
+    def test_invalid_mac_is_an_error(self) -> None:
         with mock.patch(
             'main.get_interface_mac', return_value='11:22:33:44:55:66'
         ), pytest.raises(SystemExit) as exc_info:
@@ -54,7 +54,7 @@ class TestManualMode:
 
 
 class TestRandomMode:
-    def test_changes_to_a_random_mac(self, capsys):
+    def test_changes_to_a_random_mac(self, capsys) -> None:
         with mock.patch(
             'main.get_interface_mac',
             side_effect=['11:22:33:44:55:66', 'aa:bb:cc:dd:ee:ff'],
@@ -72,7 +72,7 @@ class TestRandomMode:
 
 
 class TestRestoreMode:
-    def test_restores_the_backed_up_original(self, capsys):
+    def test_restores_the_backed_up_original(self, capsys) -> None:
         with mock.patch(
             'main.get_interface_mac',
             side_effect=['aa:aa:aa:aa:aa:aa', '11:22:33:44:55:66'],
@@ -86,7 +86,7 @@ class TestRestoreMode:
         assert exit_code == 0
         assert '11:22:33:44:55:66' in capsys.readouterr().out
 
-    def test_no_backup_is_an_error(self):
+    def test_no_backup_is_an_error(self) -> None:
         with mock.patch(
             'main.get_interface_mac', return_value='aa:aa:aa:aa:aa:aa'
         ), mock.patch('main.read_backup', return_value={}), \
@@ -96,7 +96,7 @@ class TestRestoreMode:
 
 
 class TestUndoMode:
-    def test_undoes_to_the_most_recent_history_entry(self, capsys):
+    def test_undoes_to_the_most_recent_history_entry(self, capsys) -> None:
         with mock.patch(
             'main.get_interface_mac',
             side_effect=['bb:bb:bb:bb:bb:bb', 'aa:aa:aa:aa:aa:aa'],
@@ -115,7 +115,7 @@ class TestUndoMode:
         mock_pop.assert_called_once_with(main.HISTORY_FILE, 'eth0')
         mock_append.assert_not_called()
 
-    def test_no_history_is_an_error(self):
+    def test_no_history_is_an_error(self) -> None:
         with mock.patch(
             'main.get_interface_mac', return_value='aa:aa:aa:aa:aa:aa'
         ), mock.patch('main.read_backup', return_value={}), \
@@ -126,7 +126,7 @@ class TestUndoMode:
 
 
 class TestDryRun:
-    def test_makes_no_changes(self, capsys):
+    def test_makes_no_changes(self, capsys) -> None:
         with mock.patch(
             'main.get_interface_mac', return_value='11:22:33:44:55:66'
         ), mock.patch('main.read_backup', return_value={}), \
@@ -144,7 +144,7 @@ class TestDryRun:
         mock_append_history.assert_not_called()
         assert 'DRY RUN' in capsys.readouterr().out
 
-    def test_shows_what_would_change(self, capsys):
+    def test_shows_what_would_change(self, capsys) -> None:
         with mock.patch(
             'main.get_interface_mac', return_value='11:22:33:44:55:66'
         ), mock.patch('main.read_backup', return_value={}):
@@ -159,7 +159,7 @@ class TestDryRun:
 
 
 class TestInterfaceValidation:
-    def test_nonexistent_interface_is_an_error_with_available_list(self):
+    def test_nonexistent_interface_is_an_error_with_available_list(self) -> None:
         with mock.patch('main.get_interface_mac', return_value=None), \
              mock.patch(
                  'main.list_interfaces', return_value=['eth0', 'lo']
@@ -171,7 +171,7 @@ class TestInterfaceValidation:
 
 
 class TestVerification:
-    def test_mismatch_after_change_is_an_error(self, capsys):
+    def test_mismatch_after_change_is_an_error(self, capsys) -> None:
         with mock.patch(
             'main.get_interface_mac',
             side_effect=['11:22:33:44:55:66', '11:22:33:44:55:66'],
@@ -189,7 +189,7 @@ class TestVerification:
         mock_write_backup.assert_not_called()
         mock_append_history.assert_not_called()
 
-    def test_failed_change_mac_returns_a_nonzero_exit_code(self):
+    def test_failed_change_mac_returns_a_nonzero_exit_code(self) -> None:
         with mock.patch(
             'main.get_interface_mac', return_value='11:22:33:44:55:66'
         ), mock.patch('main.read_backup', return_value={}), \

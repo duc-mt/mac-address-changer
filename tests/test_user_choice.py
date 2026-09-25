@@ -6,7 +6,7 @@ import main
 
 
 class TestUserChoice:
-    def test_choice_1_calls_manual_new_mac(self, tmp_path):
+    def test_choice_1_calls_manual_new_mac(self, tmp_path) -> None:
         backup_file = str(tmp_path / 'real_mac.txt')
         history_file = str(tmp_path / 'mac_history.txt')
         with mock.patch('builtins.input', return_value='1'), \
@@ -14,7 +14,7 @@ class TestUserChoice:
             result = main.user_choice('eth0', backup_file, history_file)
         assert result == ('aa:bb:cc:dd:ee:ff', 'manual')
 
-    def test_choice_2_calls_random_new_mac(self, tmp_path):
+    def test_choice_2_calls_random_new_mac(self, tmp_path) -> None:
         backup_file = str(tmp_path / 'real_mac.txt')
         history_file = str(tmp_path / 'mac_history.txt')
         with mock.patch('builtins.input', return_value='2'), \
@@ -22,7 +22,7 @@ class TestUserChoice:
             result = main.user_choice('eth0', backup_file, history_file)
         assert result == ('11:22:33:44:55:66', 'random')
 
-    def test_out_of_range_number_reprompts(self, capsys, tmp_path):
+    def test_out_of_range_number_reprompts(self, capsys, tmp_path) -> None:
         backup_file = str(tmp_path / 'real_mac.txt')
         history_file = str(tmp_path / 'mac_history.txt')
         with mock.patch('builtins.input', side_effect=['5', '2']), \
@@ -31,7 +31,7 @@ class TestUserChoice:
         assert result == ('11:22:33:44:55:66', 'random')
         assert 'WRONG INPUT' in capsys.readouterr().out
 
-    def test_non_integer_input_does_not_crash(self, capsys, tmp_path):
+    def test_non_integer_input_does_not_crash(self, capsys, tmp_path) -> None:
         """Regression test: int(input(...)) used to be called directly,
         raising an unhandled ValueError - crashing the whole program -
         the instant anyone typed anything that wasn't a number."""
@@ -46,7 +46,7 @@ class TestUserChoice:
 
 
 class TestUserChoiceRestoreOption:
-    def test_restore_option_offered_when_a_backup_exists(self, capsys, tmp_path):
+    def test_restore_option_offered_when_a_backup_exists(self, capsys, tmp_path) -> None:
         backup_file = str(tmp_path / 'real_mac.txt')
         history_file = str(tmp_path / 'mac_history.txt')
         main.write_backup(backup_file, 'eth0', '11:22:33:44:55:66')
@@ -57,7 +57,7 @@ class TestUserChoiceRestoreOption:
         assert result == ('11:22:33:44:55:66', 'restore')
         assert 'restore original' in capsys.readouterr().out
 
-    def test_restore_option_not_offered_without_a_backup(self, capsys, tmp_path):
+    def test_restore_option_not_offered_without_a_backup(self, capsys, tmp_path) -> None:
         backup_file = str(tmp_path / 'real_mac.txt')  # never written to
         history_file = str(tmp_path / 'mac_history.txt')
 
@@ -97,7 +97,7 @@ class TestUserChoiceRestoreOption:
 
 
 class TestUserChoiceUndoOption:
-    def test_undo_option_offered_when_history_exists(self, capsys, tmp_path):
+    def test_undo_option_offered_when_history_exists(self, capsys, tmp_path) -> None:
         backup_file = str(tmp_path / 'real_mac.txt')
         history_file = str(tmp_path / 'mac_history.txt')
         main.append_history(history_file, 'eth0', '11:22:33:44:55:66')
@@ -132,7 +132,7 @@ class TestUserChoiceUndoOption:
 
         assert result == ('11:22:33:44:55:66', 'undo')
 
-    def test_undo_option_not_offered_without_history(self, capsys, tmp_path):
+    def test_undo_option_not_offered_without_history(self, capsys, tmp_path) -> None:
         backup_file = str(tmp_path / 'real_mac.txt')
         history_file = str(tmp_path / 'mac_history.txt')  # never written to
 
@@ -155,7 +155,7 @@ class TestUserChoiceUndoOption:
 
         assert 'undo last change' not in capsys.readouterr().out
 
-    def test_both_restore_and_undo_can_be_offered_together(self, tmp_path):
+    def test_both_restore_and_undo_can_be_offered_together(self, tmp_path) -> None:
         backup_file = str(tmp_path / 'real_mac.txt')
         history_file = str(tmp_path / 'mac_history.txt')
         main.write_backup(backup_file, 'eth0', '11:22:33:44:55:66')

@@ -14,7 +14,7 @@ def make_fake_sysfs(tmp_path, interfaces):
 
 
 class TestPrintStatus:
-    def test_no_interfaces_prints_a_clear_message(self, capsys):
+    def test_no_interfaces_prints_a_clear_message(self, capsys) -> None:
         with mock.patch('main.list_interfaces', return_value=[]):
             main.print_status()
 
@@ -34,7 +34,7 @@ class TestPrintStatus:
         assert 'eth0' in out
         assert '11:22:33:44:55:66' in out
 
-    def test_shows_a_dash_when_no_backup_exists(self, capsys, tmp_path):
+    def test_shows_a_dash_when_no_backup_exists(self, capsys, tmp_path) -> None:
         make_fake_sysfs(tmp_path, {'eth0': '11:22:33:44:55:66'})
 
         with mock.patch('main.SYSFS_NET_PATH', str(tmp_path)), \
@@ -61,7 +61,7 @@ class TestPrintStatus:
         out = capsys.readouterr().out
         assert '11:22:33:44:55:66' in out
 
-    def test_shows_the_number_of_undo_steps_available(self, capsys, tmp_path):
+    def test_shows_the_number_of_undo_steps_available(self, capsys, tmp_path) -> None:
         make_fake_sysfs(tmp_path, {'eth0': 'aa:aa:aa:aa:aa:aa'})
         history_file = str(tmp_path / 'mac_history.txt')
         main.append_history(history_file, 'eth0', '11:22:33:44:55:66')
