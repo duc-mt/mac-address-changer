@@ -3,7 +3,7 @@ from __future__ import annotations
 """
 ==============================================================================
 Module Name:   test_sysfs_helpers.py
-Description:   Implementation and logic for test_sysfs_helpers.
+Description:   Tests for main.get_interface_mac() and main.list_interfaces().  Both read from SYSFS_NET_PATH rather than the hardcoded /sys/class/net, so tests point it at a throwaway directory instead of touching the real sysfs.
 Author:        Mai Tan Duc <ducmai.network@gmail.com>
 Created:       2026-10-10
 Version:       1.0.0
@@ -12,12 +12,6 @@ License:       MIT
 Usage:         python3 test_sysfs_helpers.py [options]
 Notes:         Requires Python 3.8+
 ==============================================================================
-"""
-"""Tests for main.get_interface_mac() and main.list_interfaces().
-
-Both read from SYSFS_NET_PATH rather than the hardcoded /sys/class/net,
-so tests point it at a throwaway directory instead of touching the
-real sysfs.
 """
 
 

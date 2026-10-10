@@ -3,7 +3,7 @@ from __future__ import annotations
 """
 ==============================================================================
 Module Name:   test_backup.py
-Description:   Implementation and logic for test_backup.
+Description:   Tests for main.read_backup() and main.write_backup().  The backup file stores "interface,mac" pairs, one per line, replacing the old format (a bare MAC per line, with no interface name attached - which made an automatic restore impossible to do safely, since there was no way to tell which line belonged to which interface).
 Author:        Mai Tan Duc <ducmai.network@gmail.com>
 Created:       2026-10-10
 Version:       1.0.0
@@ -12,13 +12,6 @@ License:       MIT
 Usage:         python3 test_backup.py [options]
 Notes:         Requires Python 3.8+
 ==============================================================================
-"""
-"""Tests for main.read_backup() and main.write_backup().
-
-The backup file stores "interface,mac" pairs, one per line, replacing
-the old format (a bare MAC per line, with no interface name attached -
-which made an automatic restore impossible to do safely, since there
-was no way to tell which line belonged to which interface).
 """
 
 
