@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 """
 ==============================================================================
 Module Name:   test_sysfs_helpers.py
@@ -34,9 +35,7 @@ def make_fake_sysfs(tmp_path, interfaces):
 
 
 class TestGetInterfaceMac:
-    def test_returns_the_mac_for_an_existing_interface(
-        self, tmp_path, monkeypatch
-    ):
+    def test_returns_the_mac_for_an_existing_interface(self, tmp_path, monkeypatch):
         make_fake_sysfs(tmp_path, {"eth0": "aa:bb:cc:dd:ee:ff"})
         monkeypatch.setattr(main, "SYSFS_NET_PATH", str(tmp_path))
 
@@ -49,9 +48,7 @@ class TestGetInterfaceMac:
 
         assert main.get_interface_mac("eth0") == "aa:bb:cc:dd:ee:ff"
 
-    def test_returns_none_for_a_nonexistent_interface(
-        self, tmp_path, monkeypatch
-    ):
+    def test_returns_none_for_a_nonexistent_interface(self, tmp_path, monkeypatch):
         monkeypatch.setattr(main, "SYSFS_NET_PATH", str(tmp_path))
 
         assert main.get_interface_mac("wlan9") is None
@@ -59,9 +56,7 @@ class TestGetInterfaceMac:
     def test_returns_none_when_sysfs_path_itself_is_missing(
         self, tmp_path, monkeypatch
     ):
-        monkeypatch.setattr(
-            main, "SYSFS_NET_PATH", str(tmp_path / "does-not-exist")
-        )
+        monkeypatch.setattr(main, "SYSFS_NET_PATH", str(tmp_path / "does-not-exist"))
 
         assert main.get_interface_mac("eth0") is None
 
@@ -77,8 +72,6 @@ class TestListInterfaces:
         assert main.list_interfaces() == ["eth0", "wlan0"]
 
     def test_empty_when_sysfs_path_is_missing(self, tmp_path, monkeypatch) -> None:
-        monkeypatch.setattr(
-            main, "SYSFS_NET_PATH", str(tmp_path / "does-not-exist")
-        )
+        monkeypatch.setattr(main, "SYSFS_NET_PATH", str(tmp_path / "does-not-exist"))
 
         assert main.list_interfaces() == []

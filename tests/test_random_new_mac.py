@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 """
 ==============================================================================
 Module Name:   test_random_new_mac.py
@@ -56,7 +57,7 @@ class TestRandomNewMac:
         review: the first octet's multicast bit must never be set."""
         for _ in range(200):
             mac = main.random_new_mac()
-            first_octet = int(mac.split(':')[0], 16)
+            first_octet = int(mac.split(":")[0], 16)
             assert first_octet & 0x01 == 0
 
     def test_addresses_are_not_all_identical(self) -> None:

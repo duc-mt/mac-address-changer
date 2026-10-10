@@ -32,8 +32,8 @@ import random
 # Matches the two MAC address formats ip/ifconfig actually accept: six
 # hex-digit pairs separated by colons, or by hyphens (not mixed).
 MAC_ADDRESS_PATTERN = re.compile(
-    r'^([0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2}$'
-    r'|^([0-9A-Fa-f]{2}-){5}[0-9A-Fa-f]{2}$'
+    r"^([0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2}$"
+    r"|^([0-9A-Fa-f]{2}-){5}[0-9A-Fa-f]{2}$"
 )
 
 # Where the kernel exposes each network interface's current MAC
@@ -41,21 +41,21 @@ MAC_ADDRESS_PATTERN = re.compile(
 # command reads from. A module-level constant (rather than hardcoding
 # the path in each function) so tests can point it at a fake directory
 # instead of the real /sys.
-SYSFS_NET_PATH = '/sys/class/net'
+SYSFS_NET_PATH = "/sys/class/net"
 
 # Where original MAC addresses are backed up, one "interface,mac" pair
 # per line, keyed by interface name (only ever the *true* original -
 # see write_backup()'s "only write once per interface" rule in main).
 # A module-level constant so tests can point it at a scratch file
 # instead of the real one.
-BACKUP_FILE = 'real_mac.txt'
+BACKUP_FILE = "real_mac.txt"
 
 # Where recent MAC changes are logged, so the *last* change can be
 # undone specifically - distinct from BACKUP_FILE, which only ever
 # remembers the very first (true original) value. Same "interface,mac"
 # format, but multiple lines per interface are expected: each line is
 # one past value, oldest first.
-HISTORY_FILE = 'mac_history.txt'
+HISTORY_FILE = "mac_history.txt"
 
 # How many past values to keep per interface in HISTORY_FILE. Older
 # entries are dropped as new ones are added.
@@ -89,7 +89,7 @@ def get_interface_mac(interface: str) -> str | None:
         such interface.
     """
     try:
-        with open(f'{SYSFS_NET_PATH}/{interface}/address') as f:
+        with open(f"{SYSFS_NET_PATH}/{interface}/address") as f:
             return f.read().strip()
     except OSError:
         return None
@@ -127,7 +127,7 @@ def read_backup(filename: str) -> dict[str, str]:
     try:
         with open(filename) as f:
             for line in f:
-                interface, _, mac = line.strip().partition(',')
+                interface, _, mac = line.strip().partition(",")
                 interface = interface.strip()
                 mac = mac.strip()
                 if interface and is_valid_mac(mac):
@@ -143,9 +143,9 @@ def write_backup(filename: str, interface: str, mac: str) -> None:
     interface's entry untouched."""
     backups = read_backup(filename)
     backups[interface] = mac
-    with open(filename, 'w') as f:
+    with open(filename, "w") as f:
         for iface, iface_mac in sorted(backups.items()):
-            f.write(f'{iface},{iface_mac}\n')
+            f.write(f"{iface},{iface_mac}\n")
 
 
 def read_history(filename: str) -> dict[str, list[str]]:
@@ -170,7 +170,7 @@ def read_history(filename: str) -> dict[str, list[str]]:
     try:
         with open(filename) as f:
             for line in f:
-                interface, _, mac = line.strip().partition(',')
+                interface, _, mac = line.strip().partition(",")
                 interface = interface.strip()
                 mac = mac.strip()
                 if interface and is_valid_mac(mac):
@@ -186,14 +186,18 @@ def _write_history(filename: str, history: dict[str, list[str]]) -> None:
     each interface's own entries kept in their original (oldest
     first) order. Shared by append_history() and pop_last_history()
     so the on-disk format is only ever produced in one place."""
-    with open(filename, 'w') as f:
+    with open(filename, "w") as f:
         for interface, macs in sorted(history.items()):
             for mac in macs:
-                f.write(f'{interface},{mac}\n')
+                f.write(f"{interface},{mac}\n")
 
 
-def append_history(filename: str, interface: str, mac: str,
-                   max_entries: int = MAX_HISTORY_PER_INTERFACE) -> None:
+def append_history(
+    filename: str,
+    interface: str,
+    mac: str,
+    max_entries: int = MAX_HISTORY_PER_INTERFACE,
+) -> None:
     """Record `mac` as the most recent change-history entry for
     `interface`, trimming to the `max_entries` most recent entries for
     that interface (older ones are dropped, not the whole file)."""
@@ -201,7 +205,7 @@ def append_history(filename: str, interface: str, mac: str,
     entries = history.setdefault(interface, [])
     entries.append(mac)
     if len(entries) > max_entries:
-        del entries[:len(entries) - max_entries]
+        del entries[: len(entries) - max_entries]
     _write_history(filename, history)
 
 
@@ -233,10 +237,12 @@ def manual_new_mac() -> str:
     # with its own cryptic error instead of a clear one immediately.
     new_mac = None
     while new_mac is None or not is_valid_mac(new_mac):
-        new_mac = input('Assign the new MAC address: ').strip()
+        new_mac = input("Assign the new MAC address: ").strip()
         if not is_valid_mac(new_mac):
-            print('ERROR: Not a valid MAC address (expected six hex byte '
-                  'pairs separated by : or -, e.g. 01:23:45:67:89:ab).\n')
+            print(
+                "ERROR: Not a valid MAC address (expected six hex byte "
+                "pairs separated by : or -, e.g. 01:23:45:67:89:ab).\n"
+            )
 
     return new_mac
 
@@ -268,11 +274,14 @@ def random_new_mac() -> str:
     first_byte = make_locally_administered(random.randint(0, 255))
     other_bytes = [random.randint(0, 255) for _ in range(5)]
 
-    return ':'.join(f'{byte:02x}' for byte in [first_byte, *other_bytes])
+    return ":".join(f"{byte:02x}" for byte in [first_byte, *other_bytes])
 
 
-def user_choice(interface: str, backup_filename: str = BACKUP_FILE,
-                history_filename: str = HISTORY_FILE) -> tuple[str, str]:
+def user_choice(
+    interface: str,
+    backup_filename: str = BACKUP_FILE,
+    history_filename: str = HISTORY_FILE,
+) -> tuple[str, str]:
     """Ask how to set `interface`'s new MAC address: manually,
     randomly, restored to its original value (if a backup exists), or
     undone back to its previous value (if there's change history).
@@ -310,19 +319,20 @@ def user_choice(interface: str, backup_filename: str = BACKUP_FILE,
     # below re-prompts on anything not in valid_choices, mistyping (or
     # scripting) that missing number would loop forever instead of
     # just being rejected once.
-    actions = [('manual', 'manually'), ('random', 'randomly')]
+    actions = [("manual", "manually"), ("random", "randomly")]
     if original_mac is not None:
-        actions.append(('restore', f'restore original ({original_mac})'))
+        actions.append(("restore", f"restore original ({original_mac})"))
     if last_mac is not None:
-        actions.append(('undo', f'undo last change (back to {last_mac})'))
-    menu = [f'{i}. {label}' for i, (_action, label) in enumerate(actions, 1)]
+        actions.append(("undo", f"undo last change (back to {last_mac})"))
+    menu = [f"{i}. {label}" for i, (_action, label) in enumerate(actions, 1)]
     valid_choices = list(range(1, len(actions) + 1))
 
-    print('This is a program to change your machine\'s current MAC address.',
-          'Do you want to do it:',
-          *menu,
-          sep='\n',
-          )
+    print(
+        "This is a program to change your machine's current MAC address.",
+        "Do you want to do it:",
+        *menu,
+        sep="\n",
+    )
 
     # Input validation. NOTE: this used to call `int(input(...))`
     # directly, which raised an unhandled ValueError - crashing the
@@ -331,24 +341,26 @@ def user_choice(interface: str, backup_filename: str = BACKUP_FILE,
     # protected against a *valid* integer outside {1, 2}.
     choice = None
     while choice not in valid_choices:
-        raw_choice = input('Pick a number: ')
+        raw_choice = input("Pick a number: ")
         try:
             choice = int(raw_choice)
         except ValueError:
             choice = None
         if choice not in valid_choices:
-            print('WRONG INPUT\n')
+            print("WRONG INPUT\n")
 
     # Now we have a valid choice.
     action, _ = actions[choice - 1]
-    if action == 'manual':
-        return manual_new_mac(), 'manual'
-    elif action == 'random':
-        return random_new_mac(), 'random'
-    elif action == 'restore':
-        assert original_mac is not None; return original_mac, 'restore'
+    if action == "manual":
+        return manual_new_mac(), "manual"
+    elif action == "random":
+        return random_new_mac(), "random"
+    elif action == "restore":
+        assert original_mac is not None
+        return original_mac, "restore"
     else:
-        assert last_mac is not None; return last_mac, 'undo'
+        assert last_mac is not None
+        return last_mac, "undo"
 
 
 def detect_network_tool() -> str | None:
@@ -367,10 +379,10 @@ def detect_network_tool() -> str | None:
         'ip' or 'ifconfig' (whichever is available, preferring 'ip'),
         or None if neither is.
     """
-    if shutil.which('ip') is not None:
-        return 'ip'
-    if shutil.which('ifconfig') is not None:
-        return 'ifconfig'
+    if shutil.which("ip") is not None:
+        return "ip"
+    if shutil.which("ifconfig") is not None:
+        return "ifconfig"
     return None
 
 
@@ -392,16 +404,16 @@ def build_change_commands(tool: str, interface: str, new_mac: str) -> list[list[
     list[list[str]]
         Each inner list is one subprocess argv to run, in order.
     """
-    if tool == 'ip':
+    if tool == "ip":
         return [
-            ['ip', 'link', 'set', 'dev', interface, 'down'],
-            ['ip', 'link', 'set', 'dev', interface, 'address', new_mac],
-            ['ip', 'link', 'set', 'dev', interface, 'up'],
+            ["ip", "link", "set", "dev", interface, "down"],
+            ["ip", "link", "set", "dev", interface, "address", new_mac],
+            ["ip", "link", "set", "dev", interface, "up"],
         ]
     return [
-        ['ifconfig', interface, 'down'],
-        ['ifconfig', interface, 'hw', 'ether', new_mac],
-        ['ifconfig', interface, 'up'],
+        ["ifconfig", interface, "down"],
+        ["ifconfig", interface, "hw", "ether", new_mac],
+        ["ifconfig", interface, "up"],
     ]
 
 
@@ -432,12 +444,12 @@ def change_mac(interface: str, new_mac: str, tool: str | None = None) -> bool:
     if tool is None:
         tool = detect_network_tool()
     if tool is None:
-        print('ERROR: neither ip nor ifconfig is available on this system.')
+        print("ERROR: neither ip nor ifconfig is available on this system.")
         return False
 
     for step in build_change_commands(tool, interface, new_mac):
         if subprocess.call(step) != 0:
-            print(f'ERROR: command failed: {" ".join(step)}')
+            print(f"ERROR: command failed: {' '.join(step)}")
             return False
     return True
 
@@ -448,18 +460,18 @@ def print_status() -> None:
     many change-history entries (undo steps) are available."""
     interfaces = list_interfaces()
     if not interfaces:
-        print('No network interfaces found.')
+        print("No network interfaces found.")
         return
 
     backups = read_backup(BACKUP_FILE)
     history = read_history(HISTORY_FILE)
 
-    print(f'{"INTERFACE":<15}{"CURRENT MAC":<20}{"ORIGINAL":<20}{"UNDO STEPS"}')
+    print(f"{'INTERFACE':<15}{'CURRENT MAC':<20}{'ORIGINAL':<20}{'UNDO STEPS'}")
     for interface in interfaces:
-        current = get_interface_mac(interface) or '(unavailable)'
-        original = backups.get(interface, '-')
+        current = get_interface_mac(interface) or "(unavailable)"
+        original = backups.get(interface, "-")
         undo_steps = str(len(history.get(interface, [])))
-        print(f'{interface:<15}{current:<20}{original:<20}{undo_steps}')
+        print(f"{interface:<15}{current:<20}{original:<20}{undo_steps}")
 
 
 def run_interactive() -> None:
@@ -467,9 +479,11 @@ def run_interactive() -> None:
     behaviour of this program, extended with the features above)."""
     tool = detect_network_tool()
     if tool is None:
-        print('ERROR: neither ip nor ifconfig was found. Install one (on '
-              'Debian/Ubuntu: sudo apt install iproute2 - or, for the '
-              'older ifconfig, sudo apt install net-tools) and try again.')
+        print(
+            "ERROR: neither ip nor ifconfig was found. Install one (on "
+            "Debian/Ubuntu: sudo apt install iproute2 - or, for the "
+            "older ifconfig, sudo apt install net-tools) and try again."
+        )
         raise SystemExit(1)
 
     # Specify the network interface first - restoring/undoing later
@@ -477,7 +491,7 @@ def run_interactive() -> None:
     # validating it here up front avoids wasting the user's time
     # entering a new MAC only to find out the interface name was
     # wrong.
-    interface = input('What is the network interface? ').strip()
+    interface = input("What is the network interface? ").strip()
 
     # NOTE: previously the interface name was never checked at all - a
     # typo only surfaced as ifconfig's own cryptic error partway
@@ -486,10 +500,10 @@ def run_interactive() -> None:
     # value to compare the change against.
     current_mac = get_interface_mac(interface)
     if current_mac is None:
-        print(f'ERROR: No such interface: {interface!r}.')
+        print(f"ERROR: No such interface: {interface!r}.")
         available = list_interfaces()
         if available:
-            print('Available interfaces:', ', '.join(available))
+            print("Available interfaces:", ", ".join(available))
         raise SystemExit(1)
 
     print(f"[+] {interface}'s current MAC address: {current_mac}")
@@ -513,15 +527,15 @@ def run_interactive() -> None:
     # one backup that actually mattered.
     if interface not in read_backup(BACKUP_FILE):
         write_backup(BACKUP_FILE, interface, current_mac)
-        print(f"[+] Backed up {interface}'s original MAC address to "
-              f'{BACKUP_FILE}.')
+        print(f"[+] Backed up {interface}'s original MAC address to {BACKUP_FILE}.")
 
     # Call the function to return the newly chosen MAC address.
     new_mac, action = user_choice(interface, BACKUP_FILE, HISTORY_FILE)
 
     # Inform the user of the change.
-    print(f'[+] Changing the MAC address for {interface} '
-          f'from {current_mac} to {new_mac}.')
+    print(
+        f"[+] Changing the MAC address for {interface} from {current_mac} to {new_mac}."
+    )
 
     # The process of changing the current MAC address.
 
@@ -543,12 +557,14 @@ def run_interactive() -> None:
         # Reading it back closes that loop.
         confirmed_mac = get_interface_mac(interface)
         if confirmed_mac and confirmed_mac.lower() == new_mac.lower():
-            print(f'[+] Success - {interface} is now {confirmed_mac}.')
+            print(f"[+] Success - {interface} is now {confirmed_mac}.")
         else:
-            print(f'[!] ifconfig/ip reported success, but {interface} is '
-                  f'now showing {confirmed_mac!r} instead of the requested '
-                  f'{new_mac!r} - double check the change actually took '
-                  'effect.')
+            print(
+                f"[!] ifconfig/ip reported success, but {interface} is "
+                f"now showing {confirmed_mac!r} instead of the requested "
+                f"{new_mac!r} - double check the change actually took "
+                "effect."
+            )
             return
 
         # Record this change in history so it can be undone later -
@@ -556,7 +572,7 @@ def run_interactive() -> None:
         # it just consumed is removed instead. Simple stack semantics:
         # undoing doesn't push a new entry, so there's no "redo" once
         # something's been undone - a deliberate simplification.
-        if action == 'undo':
+        if action == "undo":
             pop_last_history(HISTORY_FILE, interface)
         else:
             append_history(HISTORY_FILE, interface, current_mac)
@@ -565,96 +581,104 @@ def run_interactive() -> None:
 # ------------------------------ Non-Interactive CLI ---------------------------
 def build_arg_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        description='Change a network interface\'s MAC address, manually, '
-                     'randomly, or by restoring/undoing a previous value. '
-                     'Run with no arguments for the interactive menu.',
+        description="Change a network interface's MAC address, manually, "
+        "randomly, or by restoring/undoing a previous value. "
+        "Run with no arguments for the interactive menu.",
     )
     parser.add_argument(
-        '--status', action='store_true',
-        help='List every interface, its current MAC, whether an original '
-             'is backed up, and how many undo steps are available, then '
-             'exit.',
+        "--status",
+        action="store_true",
+        help="List every interface, its current MAC, whether an original "
+        "is backed up, and how many undo steps are available, then "
+        "exit.",
     )
-    parser.add_argument('--interface', help='The interface to change.')
+    parser.add_argument("--interface", help="The interface to change.")
     parser.add_argument(
-        '--mode', choices=['manual', 'random', 'restore', 'undo'],
-        help='How to choose the new MAC. Required together with '
-             '--interface.',
-    )
-    parser.add_argument(
-        '--mac', help='The MAC address to assign. Required with '
-                       '--mode manual.',
+        "--mode",
+        choices=["manual", "random", "restore", "undo"],
+        help="How to choose the new MAC. Required together with --interface.",
     )
     parser.add_argument(
-        '--dry-run', action='store_true',
-        help='Show what would change without actually changing it, and '
-             'without recording anything to the backup/history files.',
+        "--mac",
+        help="The MAC address to assign. Required with --mode manual.",
+    )
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Show what would change without actually changing it, and "
+        "without recording anything to the backup/history files.",
     )
     return parser
 
 
-def run_cli(args: argparse.Namespace, parser: argparse.ArgumentParser, tool: str) -> int:
+def run_cli(
+    args: argparse.Namespace, parser: argparse.ArgumentParser, tool: str
+) -> int:
     """Run one CLI-mode operation and return a process exit code."""
     interface = args.interface
     current_mac = get_interface_mac(interface)
     if current_mac is None:
         available = list_interfaces()
-        message = f'no such interface: {interface!r}'
+        message = f"no such interface: {interface!r}"
         if available:
-            message += f' (available: {", ".join(available)})'
+            message += f" (available: {', '.join(available)})"
         parser.error(message)
 
     backups = read_backup(BACKUP_FILE)
     history = read_history(HISTORY_FILE)
 
-    if args.mode == 'manual':
+    if args.mode == "manual":
         if not args.mac:
-            parser.error('--mac is required with --mode manual')
+            parser.error("--mac is required with --mode manual")
         if not is_valid_mac(args.mac):
-            parser.error(f'{args.mac!r} is not a valid MAC address '
-                          '(expected six hex byte pairs separated by : '
-                          'or -)')
+            parser.error(
+                f"{args.mac!r} is not a valid MAC address "
+                "(expected six hex byte pairs separated by : "
+                "or -)"
+            )
         new_mac = args.mac
-    elif args.mode == 'random':
+    elif args.mode == "random":
         new_mac = random_new_mac()
-    elif args.mode == 'restore':
+    elif args.mode == "restore":
         original_mac = backups.get(interface)
         if original_mac is None:
-            parser.error(f'no backup exists yet for {interface!r}')
+            parser.error(f"no backup exists yet for {interface!r}")
         new_mac = original_mac
     else:  # undo
         entries = history.get(interface, [])
         if not entries:
-            parser.error(f'no change history for {interface!r} to undo')
+            parser.error(f"no change history for {interface!r} to undo")
         new_mac = entries[-1]
 
     if args.dry_run:
-        print(f'DRY RUN: would change {interface} from {current_mac} to '
-              f'{new_mac}. No changes made.')
+        print(
+            f"DRY RUN: would change {interface} from {current_mac} to "
+            f"{new_mac}. No changes made."
+        )
         return 0
 
-    print(f'Changing the MAC address for {interface} from {current_mac} '
-          f'to {new_mac}.')
+    print(f"Changing the MAC address for {interface} from {current_mac} to {new_mac}.")
 
     if not change_mac(interface, new_mac, tool):
         return 1
 
     confirmed_mac = get_interface_mac(interface)
     if not (confirmed_mac and confirmed_mac.lower() == new_mac.lower()):
-        print(f'ERROR: ip/ifconfig reported success, but {interface} is '
-              f'now showing {confirmed_mac!r} instead of the requested '
-              f'{new_mac!r} - double check the change actually took '
-              'effect.')
+        print(
+            f"ERROR: ip/ifconfig reported success, but {interface} is "
+            f"now showing {confirmed_mac!r} instead of the requested "
+            f"{new_mac!r} - double check the change actually took "
+            "effect."
+        )
         return 1
 
-    print(f'Success - {interface} is now {confirmed_mac}.')
+    print(f"Success - {interface} is now {confirmed_mac}.")
 
     if interface not in backups:
         write_backup(BACKUP_FILE, interface, current_mac)
-        print(f"Backed up {interface}'s original MAC address to "
-              f'{BACKUP_FILE}.')
+        print(f"Backed up {interface}'s original MAC address to {BACKUP_FILE}.")
 
-    if args.mode == 'undo':
+    if args.mode == "undo":
         pop_last_history(HISTORY_FILE, interface)
     else:
         append_history(HISTORY_FILE, interface, current_mac)
@@ -673,9 +697,11 @@ def main() -> int:
     # rather than duplicated in each.
     tool = detect_network_tool()
     if tool is None:
-        print('ERROR: neither ip nor ifconfig was found. Install one (on '
-              'Debian/Ubuntu: sudo apt install iproute2 - or, for the '
-              'older ifconfig, sudo apt install net-tools) and try again.')
+        print(
+            "ERROR: neither ip nor ifconfig was found. Install one (on "
+            "Debian/Ubuntu: sudo apt install iproute2 - or, for the "
+            "older ifconfig, sudo apt install net-tools) and try again."
+        )
         return 1
 
     if args.status:
@@ -684,12 +710,12 @@ def main() -> int:
 
     if args.interface or args.mode:
         if not args.interface or not args.mode:
-            parser.error('--interface and --mode must be given together')
+            parser.error("--interface and --mode must be given together")
         return run_cli(args, parser, tool)
 
     run_interactive()
     return 0
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     raise SystemExit(main())
