@@ -1,3 +1,4 @@
+from __future__ import annotations
 """
 ==============================================================================
 Module Name:   test_cli.py
@@ -16,7 +17,6 @@ main.main() with a mocked sys.argv - the way a person would actually
 invoke `python main.py --interface ... --mode ...` from a shell).
 """
 
-from __future__ import annotations
 
 from unittest import mock
 

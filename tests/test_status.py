@@ -1,3 +1,4 @@
+from __future__ import annotations
 """
 ==============================================================================
 Module Name:   test_status.py
@@ -11,7 +12,6 @@ Usage:         python3 test_status.py [options]
 Notes:         Requires Python 3.8+
 ==============================================================================
 """
-from __future__ import annotations
 
 from unittest import mock
 

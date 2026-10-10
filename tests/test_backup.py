@@ -1,3 +1,4 @@
+from __future__ import annotations
 """
 ==============================================================================
 Module Name:   test_backup.py
@@ -19,7 +20,6 @@ which made an automatic restore impossible to do safely, since there
 was no way to tell which line belonged to which interface).
 """
 
-from __future__ import annotations
 
 import main
 

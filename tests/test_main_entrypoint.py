@@ -1,3 +1,4 @@
+from __future__ import annotations
 """
 ==============================================================================
 Module Name:   test_main_entrypoint.py
@@ -15,7 +16,6 @@ Notes:         Requires Python 3.8+
 main.main() (top-level dispatch between --status/CLI mode/interactive).
 """
 
-from __future__ import annotations
 
 from unittest import mock
 

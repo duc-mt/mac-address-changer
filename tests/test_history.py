@@ -1,3 +1,4 @@
+from __future__ import annotations
 """
 ==============================================================================
 Module Name:   test_history.py
@@ -17,7 +18,6 @@ last change", distinct from the backup file (which only ever
 remembers the true original).
 """
 
-from __future__ import annotations
 
 import main
 

@@ -1,3 +1,4 @@
+from __future__ import annotations
 """
 ==============================================================================
 Module Name:   test_sysfs_helpers.py
@@ -18,7 +19,6 @@ so tests point it at a throwaway directory instead of touching the
 real sysfs.
 """
 
-from __future__ import annotations
 
 import main
 

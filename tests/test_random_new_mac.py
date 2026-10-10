@@ -1,3 +1,4 @@
+from __future__ import annotations
 """
 ==============================================================================
 Module Name:   test_random_new_mac.py
@@ -23,7 +24,6 @@ construction; these tests confirm that fix rather than just
 re-asserting the old "sometimes fails" behaviour.
 """
 
-from __future__ import annotations
 
 import main
 

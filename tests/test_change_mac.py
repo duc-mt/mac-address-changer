@@ -1,3 +1,4 @@
+from __future__ import annotations
 """
 ==============================================================================
 Module Name:   test_change_mac.py
@@ -25,7 +26,6 @@ Regression coverage for two bugs found during review:
    fallback.
 """
 
-from __future__ import annotations
 
 from unittest import mock
 
