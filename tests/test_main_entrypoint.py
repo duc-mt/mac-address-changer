@@ -1,8 +1,7 @@
-
 """
 ==============================================================================
 Module Name:   test_main_entrypoint.py
-Description:   Tests for main.run_interactive() (the interactive session) and main.main() (top-level dispatch between --status/CLI mode/interactive).
+Description:   Source module test_main_entrypoint.py.
 Author:        Mai Tan Duc <ducmai.network@gmail.com>
 Created:       2026-10-10
 Version:       1.0.0

@@ -1,8 +1,7 @@
-
 """
 ==============================================================================
 Module Name:   test_sysfs_helpers.py
-Description:   Tests for main.get_interface_mac() and main.list_interfaces().  Both read from SYSFS_NET_PATH rather than the hardcoded /sys/class/net, so tests point it at a throwaway directory instead of touching the real sysfs.
+Description:   Source module test_sysfs_helpers.py.
 Author:        Mai Tan Duc <ducmai.network@gmail.com>
 Created:       2026-10-10
 Version:       1.0.0

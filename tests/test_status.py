@@ -1,8 +1,7 @@
-
 """
 ==============================================================================
 Module Name:   test_status.py
-Description:   Implementation and logic for test_status.
+Description:   Source module test_status.py.
 Author:        Mai Tan Duc <ducmai.network@gmail.com>
 Created:       2026-10-10
 Version:       1.0.0

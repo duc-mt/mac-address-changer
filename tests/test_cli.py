@@ -1,8 +1,7 @@
-
 """
 ==============================================================================
 Module Name:   test_cli.py
-Description:   Tests for the non-interactive CLI mode (main.run_cli(), reached via main.main() with a mocked sys.argv - the way a person would actually invoke `python main.py --interface ... --mode ...` from a shell).
+Description:   Source module test_cli.py.
 Author:        Mai Tan Duc <ducmai.network@gmail.com>
 Created:       2026-10-10
 Version:       1.0.0

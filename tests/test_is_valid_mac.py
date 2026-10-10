@@ -1,8 +1,7 @@
-
 """
 ==============================================================================
 Module Name:   test_is_valid_mac.py
-Description:   Implementation and logic for test_is_valid_mac.
+Description:   Source module test_is_valid_mac.py.
 Author:        Mai Tan Duc <ducmai.network@gmail.com>
 Created:       2026-10-10
 Version:       1.0.0

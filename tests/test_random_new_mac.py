@@ -1,8 +1,7 @@
-
 """
 ==============================================================================
 Module Name:   test_random_new_mac.py
-Description:   Tests for main.random_new_mac() and main.make_locally_administered().  Regression coverage for the headline bug found during review: the original random-MAC generator's own docstring acknowledged that it "may come up with an error message ... just re-run the program until no error occurs" - a fully random first octet has its multicast bit set on ~50% of possible byte values, and a multicast address is never valid as a NIC's own MAC. make_locally_administered() fixes this by construction; these tests confirm that fix rather than just re-asserting the old "sometimes fails" behaviour.
+Description:   Source module test_random_new_mac.py.
 Author:        Mai Tan Duc <ducmai.network@gmail.com>
 Created:       2026-10-10
 Version:       1.0.0

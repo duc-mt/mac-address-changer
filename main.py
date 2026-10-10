@@ -1,20 +1,19 @@
+"""
+==============================================================================
+Module Name:   main.py
+Description:   Source module main.py.
+Author:        Mai Tan Duc <ducmai.network@gmail.com>
+Created:       2026-10-10
+Version:       1.0.0
+License:       MIT
+==============================================================================
+Usage:         python3 main.py [options]
+Notes:         Requires Python 3.8+
+==============================================================================
+"""
+
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
-
-# =============================================================================
-#
-#        FILE:  main.py
-#      AUTHOR:  Mai Tan Duc <ducmai.network@gmail.com>
-#     CREATED:  2021-10-04
-# DESCRIPTION:  Change the machine's current MAC address.
-#               This program MUST be run in the Root Terminal.
-#
-# =============================================================================
-
-
-# ------------------------------- Module Imports ------------------------------
-# Standard lib - access CLI scripting for inputting user commands.
-# To parse command-line arguments for the non-interactive CLI mode.
 import argparse
 import os
 

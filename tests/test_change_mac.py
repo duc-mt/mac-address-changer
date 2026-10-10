@@ -1,8 +1,7 @@
-
 """
 ==============================================================================
 Module Name:   test_change_mac.py
-Description:   Tests for main.change_mac(), main.detect_network_tool(), and main.build_change_commands().  Regression coverage for two bugs found during review:  1. Each subprocess.call()'s exit code used to be discarded entirely,    so a failed step didn't stop the script from blindly running the    next command anyway. 2. Only ifconfig (from net-tools) was ever tried, which many modern    Linux distributions no longer install by default. `ip` (from    iproute2, nearly universal) is now tried first, with ifconfig as a    fallback.
+Description:   Source module test_change_mac.py.
 Author:        Mai Tan Duc <ducmai.network@gmail.com>
 Created:       2026-10-10
 Version:       1.0.0
