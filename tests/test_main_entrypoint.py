@@ -1,3 +1,16 @@
+"""
+==============================================================================
+Module Name:   test_main_entrypoint.py
+Description:   Implementation and logic for test_main_entrypoint.
+Author:        Mai Tan Duc <ducmai.network@gmail.com>
+Created:       2026-10-10
+Version:       1.0.0
+License:       MIT
+==============================================================================
+Usage:         python3 test_main_entrypoint.py [options]
+Notes:         Requires Python 3.8+
+==============================================================================
+"""
 """Tests for main.run_interactive() (the interactive session) and
 main.main() (top-level dispatch between --status/CLI mode/interactive).
 """

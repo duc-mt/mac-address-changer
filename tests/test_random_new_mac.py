@@ -1,3 +1,16 @@
+"""
+==============================================================================
+Module Name:   test_random_new_mac.py
+Description:   Implementation and logic for test_random_new_mac.
+Author:        Mai Tan Duc <ducmai.network@gmail.com>
+Created:       2026-10-10
+Version:       1.0.0
+License:       MIT
+==============================================================================
+Usage:         python3 test_random_new_mac.py [options]
+Notes:         Requires Python 3.8+
+==============================================================================
+"""
 """Tests for main.random_new_mac() and main.make_locally_administered().
 
 Regression coverage for the headline bug found during review: the

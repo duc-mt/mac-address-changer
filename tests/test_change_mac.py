@@ -1,3 +1,16 @@
+"""
+==============================================================================
+Module Name:   test_change_mac.py
+Description:   Implementation and logic for test_change_mac.
+Author:        Mai Tan Duc <ducmai.network@gmail.com>
+Created:       2026-10-10
+Version:       1.0.0
+License:       MIT
+==============================================================================
+Usage:         python3 test_change_mac.py [options]
+Notes:         Requires Python 3.8+
+==============================================================================
+"""
 """Tests for main.change_mac(), main.detect_network_tool(), and
 main.build_change_commands().
 

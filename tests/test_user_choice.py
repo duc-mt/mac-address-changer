@@ -1,3 +1,16 @@
+"""
+==============================================================================
+Module Name:   test_user_choice.py
+Description:   Implementation and logic for test_user_choice.
+Author:        Mai Tan Duc <ducmai.network@gmail.com>
+Created:       2026-10-10
+Version:       1.0.0
+License:       MIT
+==============================================================================
+Usage:         python3 test_user_choice.py [options]
+Notes:         Requires Python 3.8+
+==============================================================================
+"""
 from __future__ import annotations
 
 from unittest import mock

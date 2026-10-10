@@ -1,3 +1,16 @@
+"""
+==============================================================================
+Module Name:   test_history.py
+Description:   Implementation and logic for test_history.
+Author:        Mai Tan Duc <ducmai.network@gmail.com>
+Created:       2026-10-10
+Version:       1.0.0
+License:       MIT
+==============================================================================
+Usage:         python3 test_history.py [options]
+Notes:         Requires Python 3.8+
+==============================================================================
+"""
 """Tests for main.read_history(), main.append_history(), and
 main.pop_last_history() - the change-history mechanism behind "undo
 last change", distinct from the backup file (which only ever
