@@ -14,19 +14,17 @@
 
 # ------------------------------- Module Imports ------------------------------
 # Standard lib - access CLI scripting for inputting user commands.
-import os
-import shutil
-import subprocess
-
 # To parse command-line arguments for the non-interactive CLI mode.
 import argparse
-
-# Regular expressions - validate a manually-entered MAC address.
-import re
+import os
 
 # Randomly choose a hex (or nibble) for each figure of the new MAC address.
 import random
 
+# Regular expressions - validate a manually-entered MAC address.
+import re
+import shutil
+import subprocess
 
 # ------------------------------- Named Constant -------------------------------
 # Matches the two MAC address formats ip/ifconfig actually accept: six
