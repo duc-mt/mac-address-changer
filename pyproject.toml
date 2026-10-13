@@ -18,6 +18,7 @@ dev = [
 ]
 
 [tool.ruff]
+extend-exclude = [".agents"]
 line-length = 88
 target-version = "py310"
 
